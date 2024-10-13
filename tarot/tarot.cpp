@@ -26,24 +26,25 @@ std::string coins[14] = {"one of coins", "two of coins", "three of coins", "four
                         "nine of coins", "ten of coins",
                         "page of coins", "knight of coins", "queen of coins", "king of coins"};
 
-std::string cups[14] = {"one of cups", "two of cups", "three of cups", "four of cups",
-                        "five of cups", "six of cups", "seven of cups", "eight of cups",
-                        "nine of cups", "ten of cups",
-                        "page of cups", "knight of cups", "queen of cups", "king of cups"};
+std::string pentacles[14] = {"one of pentacles", "two of pentacles", "three of pentacles",
+                        "four of pentacles", "five of pentacles", "six of pentacles",
+                        "seven of pentacles", "eight of pentacles", "nine of pentacles",
+                        "ten of pentacles", "page of pentacles", "knight of pentacles",
+                        "queen of pentacles", "king of pentacles"};
 
 std::string drawsuit(std::string *arr) {
-    int dex = rand() % sizeof(arr);
+int dex = rand() % sizeof(arr);
 
-    while (arr[dex] == "reroll") {
-        srand(time(nullptr));
-        dex = rand() % sizeof(arr);
-    }
+while (arr[dex] == "reroll") {
+    srand(time(nullptr));
+    dex = rand() % sizeof(arr);
+}
 
-    std::string hold = arr[dex];
+std::string hold = arr[dex];
 
-    arr[dex] = "reroll";
+arr[dex] = "reroll";
 
-    return hold;
+return hold;
 }
 
 void swish(int sel = rand() % 5) {
@@ -61,11 +62,19 @@ void swish(int sel = rand() % 5) {
                 std::cout << drawsuit(coins);
                 break;
             case 4:
-                std::cout << drawsuit(cups);
+                std::cout << drawsuit(pentacles);
                 break;
             default:
                 std::cout << "An error has occurred in function swish()." << '\n';
-        }
+    }
+}
+
+std::string reversal() {
+    if (rand() % 2 == 0) {
+        return ", reversal";
+    } else {
+        return "";
+    }
 }
 
 void draw(int drawcount = 3) {
@@ -75,9 +84,10 @@ void draw(int drawcount = 3) {
 
     for (int i = 0; i < drawcount - 1; i ++) {
         swish();
-        std::cout << ", ";
+        std::cout << reversal() << "; ";
     }
     swish();
+    std::cout << reversal();
 
     std::cout << " >";
 
