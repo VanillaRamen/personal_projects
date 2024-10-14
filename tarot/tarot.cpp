@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 // amateur work of vanillaramen
 
@@ -32,19 +33,63 @@ std::string pentacles[14] = {"one of pentacles", "two of pentacles", "three of p
                         "ten of pentacles", "page of pentacles", "knight of pentacles",
                         "queen of pentacles", "king of pentacles"};
 
-std::string drawsuit(std::string *arr) {
-int dex = rand() % sizeof(arr);
 
-while (arr[dex] == "reroll") {
-    srand(time(nullptr));
-    dex = rand() % sizeof(arr);
+
+void reset_deck() { // yeah i know this solution is messy and there's probably a better one but i mean come on
+    std::string major_arcana_copy[22] = {"The Fool", "The Magician", "The High Priestess",
+                    "The Empress",      "The Emperor",      "The Hierophant",
+                    "The Lovers",       "The Chariot",      "Strength",
+                    "The Hermit",       "Wheel of Fortune", "Justice",
+                    "The Hanged Man",   "Death",            "Temperance",
+                    "The Devil",        "The Tower",        "The Star",
+                    "The Moon",         "The Sun",          "Judgement",        "The World"};
+
+    std::string swords_copy[14] = {"one of swords", "two of swords", "three of swords",
+                            "four of swords", "five of swords", "six of swords", "seven of swords",
+                            "eight of swords", "nine of swords", "ten of swords", "page of swords",
+                            "knight of swords", "queen of swords", "king of swords"};
+
+    std::string wands_copy[14] = {"one of wands", "two of wands", "three of wands", "four of wands",
+                            "five of wands", "six of wands", "seven of wands", "eight of wands",
+                            "nine of wands", "ten of wands", "page of wands", "knight of wands",
+                            "queen of wands", "king of wands"};
+
+    std::string coins_copy[14] = {"one of coins", "two of coins", "three of coins", "four of coins",
+                            "five of coins", "six of coins", "seven of coins", "eight of coins",
+                            "nine of coins", "ten of coins", "page of coins", "knight of coins",
+                            "queen of coins", "king of coins"};
+
+    std::string pentacles_copy[14] = {"one of pentacles", "two of pentacles", "three of pentacles",
+                            "four of pentacles", "five of pentacles", "six of pentacles",
+                            "seven of pentacles", "eight of pentacles", "nine of pentacles",
+                            "ten of pentacles", "page of pentacles", "knight of pentacles",
+                            "queen of pentacles", "king of pentacles"};
+
+    for (int i = 0; i < 22; i++) {
+        major_arcana[i] = major_arcana_copy[i];
+    }
+
+    for (int i = 0; i < 14; i++) {
+        swords[i] = swords_copy[i];
+        wands[i] = wands_copy[i];
+        coins[i] = coins_copy[i];
+        pentacles[i] = pentacles_copy[i];
+    }
 }
 
-std::string hold = arr[dex];
+std::string drawsuit(std::string *arr) {
+    int dex;
 
-arr[dex] = "reroll";
+    do {
+        srand(time(nullptr));
+        dex = rand() % sizeof(arr);
+    } while (arr[dex] == "reroll");
 
-return hold;
+    std::string hold = arr[dex];
+
+    arr[dex] = "reroll";
+
+    return hold;
 }
 
 void swish(int sel = rand() % 5) {
@@ -103,4 +148,13 @@ int main() {
     std::cout << "Drawing " << count << "!\n";
 
     draw(count);
+
+    std::cout << "again? (y/n)\n";
+
+    char user_in;
+    std::cin >> user_in;
+    if (std::tolower(user_in) == 'y') {
+        reset_deck();
+        main();
+    }
 }
