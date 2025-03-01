@@ -18,9 +18,9 @@ void slow_cout(std::string ustr, std::string end = "\n", std::chrono::millisecon
     std::cout << end;
 }
 
-const std::string fishies[8] = {
+const std::string fishies[8] {
     "pike",         // 0
-    "sturgeon",     // 1 one tab less
+    "sturgeon",     // 1
     "catfish",      // 2
     "salmon",       // 3
     "bass",         // 4
@@ -29,15 +29,13 @@ const std::string fishies[8] = {
     "gar"           // 7
 };
 
-const int num_fishies = std::end(fishies) - std::begin(fishies);
-
-int inv[num_fishies];
+const int num_fishies { std::end(fishies) - std::begin(fishies) };
 
 void wait_one() {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
-void getinv() {
+void getinv(int* inv) {
     std::ifstream fin;
 
     fin.open("./fish_data.txt");
@@ -52,20 +50,21 @@ void getinv() {
     fin.close();
 }
 
-void display() {
+void display(int* inv) {
     for (int i = 0; i < num_fishies; i++) {
-        slow_cout(fishies[i] + ":\t", "", std::chrono::milliseconds(80));
+        slow_cout(fishies[i] + ":\t", "", std::chrono::milliseconds(60));
         // std::cout << fishies[i] << ":\t"; // orig fast code
         if (fishies[i].size() < 7) {
             std::cout << '\t';
         }
         std::cout << inv[i] << '\n';
     }
+    wait_one();
 }
 
-void fish() {
+void fish(int* inv) {
     srand(time(nullptr));
-    int ind = rand() % num_fishies;
+    int ind { rand() % num_fishies };
     inv[ind] += 1;
 
     std::cout << "Casting rod"; slow_cout("... ", "");
@@ -86,13 +85,13 @@ void fish() {
     slow_cout("'>", "\n", std::chrono::milliseconds(250));
 }
 
-void quit() {
+void quit(int* inv) {
     std::ofstream fout;
 
     fout.open("./fish_data.txt");
 
-    for (int n : inv) {
-        fout << n << '\n';
+    for (int i = 0; i < num_fishies; i++) {
+        fout << inv[i] << '\n';
     }
 
     fout.close();
@@ -100,21 +99,21 @@ void quit() {
 
 
 int main() {
-    getinv();
-    bool loop = true;
+    int inv[num_fishies] {};
+    getinv(inv);
 
     std::cout << "You are now fishing!\n";
 
     char cuin = '0';
 
-    while (loop) { // main game loop
+    while (true) { // main game loop
         std::cout << "+----------------------------------------------+\n";
         std::cout << " \"f\" to fish | " << "\"d\" to display inv | " << "\"q\" to quit\n";
         std::cin >> cuin;
 
-        if (cuin == 'f') { fish(); wait_one(); }
-        else if (cuin == 'd') { display(); }
-        else if (cuin == 'q') { quit(); loop = false; }
+        if (cuin == 'f') { fish(inv); wait_one(); }
+        else if (cuin == 'd') { display(inv); }
+        else if (cuin == 'q') { quit(inv); break; }
     }
 
     return 0; // end of prog
